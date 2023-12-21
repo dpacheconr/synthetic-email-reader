@@ -18,7 +18,7 @@ quay.io/newrelic/synthetics-minion:latest
 - STEP 2: update the imapConfig in script.js with password obtained in step 1 and your email address 
 - STEP 3: create your synthetic script and choose your private location
 
-# Dependencies
+
 ## This custom module depends on the following libraries 
 - https://www.npmjs.com/package/imap
 - https://www.npmjs.com/package/mailparser
