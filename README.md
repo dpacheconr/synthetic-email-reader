@@ -6,7 +6,8 @@
 - STEP 3: Run CPM and mount the custom-modules-folder to /var/lib/newrelic/synthetics/modules as read write as per https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/containerized-private-minion-cpm-configuration/#custom-npm-modules-custom-modules
 
 ```
-docker run -e MINION_PRIVATE_LOCATION_KEY=NRSP-XXXXXXXXXXXXX -d --restart unless-stopped \ 
+docker run -e MINION_PRIVATE_LOCATION_KEY=NRSP-XXXXXXXXXXXXX \ 
+-d --restart unless-stopped \ 
 -v /tmp:/tmp:rw -v /var/run/docker.sock:/var/run/docker.sock:rw \
 -v /PATH_TO_CUSTOM_MODULE_FOLDER/custom-module-folder:/var/lib/newrelic/synthetics/modules:rw \
 quay.io/newrelic/synthetics-minion:latest
