@@ -2,8 +2,9 @@
 
 ## CUSTOM MODULE
 - STEP 1: Clone custom-modules-folder in this repo to the machine running CPM
-- STEP 2: Obtain private location key as per https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/install-containerized-private-minions-cpms/
-- STEP 3: Run CPM and mount the custom-modules-folder to /var/lib/newrelic/synthetics/modules as read write as per https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/containerized-private-minion-cpm-configuration/#custom-npm-modules-custom-modules
+- STEP 2: Change custom-modules-folder permissions (chown -R $USER:3729) as per https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/containerized-private-minion-cpm-configuration/#guidelines-for-mounting-volumes
+- STEP 3: Obtain private location key as per https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/install-containerized-private-minions-cpms/
+- STEP 4: Run CPM and mount the custom-modules-folder to /var/lib/newrelic/synthetics/modules as read write as per https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/containerized-private-minion-cpm-configuration/#custom-npm-modules-custom-modules
 
 ```
 docker run -e MINION_PRIVATE_LOCATION_KEY=NRSP-XXXXXXXXXXXXX \ 
