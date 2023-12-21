@@ -10,7 +10,7 @@
 docker run -e MINION_PRIVATE_LOCATION_KEY=NRSP-XXXXXXXXXXXXX \ 
 -d --restart unless-stopped \ 
 -v /tmp:/tmp:rw -v /var/run/docker.sock:/var/run/docker.sock:rw \
--v /PATH_CUST_MOD_FOLDER/custom-module-folder:/var/lib/newrelic/synthetics/modules:rw \
+-v /PATH_CUST_MOD_FOLDER/custom-modules-folder:/var/lib/newrelic/synthetics/modules:rw \
 quay.io/newrelic/synthetics-minion:latest
 ```
 
