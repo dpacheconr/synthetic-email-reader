@@ -23,7 +23,7 @@ To copy the repo and change directory into custom-module
 git clone https://github.com/dpacheconr/synthetic-email-reader.git && cd synthetic-email-reader/custom-modules-folder && helm repo add newrelic https://helm-charts.newrelic.com && helm repo update
 ```
 
-To install synthetic mion and copy the custom-module into running pod, update the private location key before running
+To install synthetic minion and copy the custom-module into running pod, update the private location key before running
 
 ```
 helm upgrade --install newrelic-cpm newrelic/synthetics-minion -n newrelic --set synthetics.privateLocationKey=NRSP-XXXX --set synthetics.hordeApiEndpoint=https://synthetics-horde.eu01.nr-data.net --set persistence.customModules=custom-modules-folder --create-namespace && echo "\n Waiting for pod to be ready, before copying custom-modules \n" && kubectl wait --for=condition=Ready -n newrelic pod/newrelic-cpm-synthetics-minion-0 --timeout=120s && kubectl cp . newrelic/newrelic-cpm-synthetics-minion-0:/var/lib/newrelic/synthetics/modules/ -c synthetics-minion && echo "\n Waiting for Minion to be ready to use \n" && kubectl logs -n newrelic newrelic-cpm-synthetics-minion-0 -c synthetics-minion -f | grep -q "is ready and servicing location" && echo "\n Minion ready \n"
