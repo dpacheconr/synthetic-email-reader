@@ -2,6 +2,8 @@ const ImapC = require('imapc');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+let EMAIL_DATA_PARSED
+
 async function run(subject) {
     const config = {
         imap: {
@@ -39,8 +41,9 @@ async function run(subject) {
     }
     for (const email of emails) {
         // add logic to used with email found
-        console.log("Email body is",email.body)
-
+        // console.log("Email body is",email.body)
+        let match = email.body.match(/\d{8}/);
+        EMAIL_DATA_PARSED = match[0]
         // to move emails to bin
         // deleteEmail = await imap.moveEmail(email.uid,'[Gmail]/Bin')
     }
@@ -50,4 +53,12 @@ async function run(subject) {
 // email subject to search
 let subject = "test"
 
-run(subject)
+run(subject).then(function() {
+    console.log("My data parsed from email is",EMAIL_DATA_PARSED)
+})
+.catch(e => {
+    if (e.type && e.type === 'Step error') {
+    console.log(JSON.stringify(e));
+    }
+    throw e.message;
+});
