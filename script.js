@@ -21,13 +21,18 @@ async function run(subject) {
     console.log("Connection result",result)
     const boxName = await imap.openBox();
 
+    var durationInMinutes = 10; // how long ago should we look for emails, in this example email should have arrived in last 10 minutes
+    var to = Date.now()
+    var since = new Date(to - durationInMinutes * 60000);
+    
+    console.log("Looking for new emails since",since)
 
     let markEmailasSeen = true // mark email as read if match is
 
     // default criteria is to search for new unseen emails
     const criteria = [];
     criteria.push('UNSEEN');
-    criteria.push(['SINCE',new Date()]);
+    criteria.push(['SINCE', since]);
     if (subject) {
         criteria.push(['HEADER', 'SUBJECT', subject]);
     }
