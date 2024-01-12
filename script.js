@@ -32,6 +32,7 @@ async function run(subject) {
 
     const deletecriteria = [];
     deletecriteria.push('ALL');
+    // 'SENTSINCE' - Messages whose Date header (disregarding time and timezone) is within or later than the specified date. -> https://www.npmjs.com/package/imap
     deletecriteria.push(['SENTSINCE',since]);
     if (subject) {
         deletecriteria.push(['HEADER', 'SUBJECT', subject]);
