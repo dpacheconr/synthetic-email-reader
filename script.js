@@ -15,24 +15,49 @@ async function run(subject) {
         }
     };
 
-    const imap = new ImapC.ImapC(config);
+   const imap = new ImapC.ImapC(config);
 
-    const result = await imap.connect();
+   const result = await imap.connect();
     console.log("Connection result",result)
     const boxName = await imap.openBox();
 
-    var durationInMinutes = 10; // how long ago should we look for emails, in this example email should have arrived in last 10 minutes
+
+    var durationInMinutes = 1;
     var to = Date.now()
     var since = new Date(to - durationInMinutes * 60000);
+
+
+    // delete old emails before checking for new emails
+    console.log("Checking for emails older than",since,"to delete")
+
+    const deletecriteria = [];
+    deletecriteria.push('ALL');
+    deletecriteria.push(['SENTSINCE',since]);
+    if (subject) {
+        deletecriteria.push(['HEADER', 'SUBJECT', subject]);
+    }
+
+    let emailstodelete = await imap.fetchEmails(deletecriteria);
+    console.log(emailstodelete.length)
+    if (emailstodelete.length > 0){
+        for (const emailtodelete of emailstodelete) {
+            console.log("Deleting old email")
+            // to move emails to bin
+            deleteEmail = await imap.moveEmail(emailtodelete.uid,'[Gmail]/Bin')
+        }
     
-    console.log("Looking for new emails since",since)
+    } else {
+        console.log("Not found any emails to delete")
+    }
+    
+    console.log("Now waiting for new emails since",since)
 
     let markEmailasSeen = true // mark email as read if match is
 
     // default criteria is to search for new unseen emails
     const criteria = [];
     criteria.push('UNSEEN');
-    criteria.push(['SINCE', since]);
+    criteria.push(['SINCE',since]);
     if (subject) {
         criteria.push(['HEADER', 'SUBJECT', subject]);
     }
@@ -46,20 +71,21 @@ async function run(subject) {
     }
     for (const email of emails) {
         // add logic to used with email found
-        // console.log("Email body is",email.body)
-        let match = email.body.match(/\d{8}/);
-        EMAIL_DATA_PARSED = match[0]
+        console.log("Email found")
+        // let match = email.body.match(/\d{8}/);
+        // OTP_CODE = match[0]
+
         // to move emails to bin
-        // deleteEmail = await imap.moveEmail(email.uid,'[Gmail]/Bin')
+        deleteEmail = await imap.moveEmail(email.uid,'[Gmail]/Bin')
     }
     await imap.end();
 }
 
 // email subject to search
-let subject = "test"
+let subject = "One-time passcode (OTP)"
 
 run(subject).then(function() {
-    console.log("My data parsed from email is",EMAIL_DATA_PARSED)
+    console.log("My code is ",OTP_CODE)
 })
 .catch(e => {
     if (e.type && e.type === 'Step error') {
@@ -67,3 +93,4 @@ run(subject).then(function() {
     }
     throw e.message;
 });
+
