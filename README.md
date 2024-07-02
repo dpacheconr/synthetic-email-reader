@@ -35,7 +35,7 @@ helm upgrade --install newrelic-cpm newrelic/synthetics-minion -n newrelic --set
 
 ## Kubernetes -> SJM
 
-### PRE-REQ: persistent volume and volume claim -> volume.yaml
+- PRE-REQ: persistent volume and volume claim -> volume.yaml
 
 To copy the repo and change directory into custom-module
 
