@@ -49,7 +49,7 @@ To install Synthetics Job Manager and copy the custom-module into running pod, u
 kubectl apply -f volume.yaml -n newrelic \
 && helm upgrade --install newrelic-sjm newrelic/synthetics-job-manager -n newrelic --set synthetics.privateLocationKey=NRSP-XXX \
 --set synthetics.hordeApiEndpoint=https://synthetics-horde.eu01.nr-data.net \
---set global.persistence.existingClaimName="cmf-pvc" --set global.customNodeModules.customNodeModulesPath="custom-modules-folder" --create-namespace \
+--set global.persistence.existingClaimName="cmf-pvc" --set global.customNodeModules.customNodeModulesPath="custom-modules-folder" \
 && echo "\nWaiting for 20 seconds for volume to bound to SJM pod, before copying custom-modules \n" && sleep 20 \
 && POD=$(kubectl get pod -n newrelic -l app.kubernetes.io/name=synthetics-job-manager -o jsonpath="{.items[0].metadata.name}")  \
 && kubectl cp custom-modules-folder -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
