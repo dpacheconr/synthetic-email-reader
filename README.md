@@ -50,15 +50,20 @@ kubectl apply -f volume.yaml -n newrelic \
 && helm upgrade --install newrelic-sjm newrelic/synthetics-job-manager -n newrelic --set synthetics.privateLocationKey=NRSP-XXX \
 --set synthetics.hordeApiEndpoint=https://synthetics-horde.eu01.nr-data.net \
 --set global.persistence.existingClaimName="cmf-pvc" --set global.customNodeModules.customNodeModulesPath="custom-modules-folder" \
-&& echo "\nWaiting for 20 seconds for volume to bound to SJM pod, before copying custom-modules \n" && sleep 20 \
+&& echo "\nWaiting for pod to schedule to node\n" \
 && POD=$(kubectl get pod -n newrelic -l app.kubernetes.io/name=synthetics-job-manager -o jsonpath="{.items[0].metadata.name}")  \
-&& kubectl cp custom-modules-folder -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
-&& kubectl cp package.json -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
+&& kubectl wait pod --for=condition=PodScheduled -n newrelic $POD --timeout=300s \
+&& echo "\nPod scheduled, waiting for containers to start\n" \
+&& kubectl wait pod --for=condition=PodReadyToStartContainers -n newrelic $POD --timeout=300s \
+&& echo "\nPod containers starting, copying custom modules" \
+&& kubectl cp custom-modules-folder/imapc -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
+&& kubectl cp custom-modules-folder/package.json -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
 && echo "\nWaiting for SJM pod to be ready\n" \
 && kubectl wait pod --for=condition=Ready -n newrelic $POD --timeout=300s \
 && kubectl logs -n newrelic $POD -c synthetics-job-manager -f | grep -q "Custom node modules installed successfully." \
-&& echo "\nSJM ready \n"
+&& echo "\nSJM pod ready \n"
 ```
+
 
 ## GMAIL example
 - STEP 1: create app password for script to use as per https://support.google.com/mail/answer/185833?sjid=8024189058214870792-NC

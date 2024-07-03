@@ -1,0 +1,6 @@
+{
+  "name": "imapc",
+  "dependencies": {
+    "imapc": "file:./imapc"
+  }
+}

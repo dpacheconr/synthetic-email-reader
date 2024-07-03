@@ -11,7 +11,8 @@ async function run(subject) {
             password: 'YOUR_PASSWORD',
             host: 'imap.gmail.com',
             port: 993,
-            tls: true
+            tls: true,
+            tlsOptions: {rejectUnauthorized: false}
         }
     };
 
