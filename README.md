@@ -53,9 +53,7 @@ kubectl apply -f volume.yaml -n newrelic \
 && echo "\nWaiting for pod to schedule to node\n" \
 && POD=$(kubectl get pod -n newrelic -l app.kubernetes.io/name=synthetics-job-manager -o jsonpath="{.items[0].metadata.name}")  \
 && kubectl wait pod --for=condition=PodScheduled -n newrelic $POD --timeout=300s \
-&& echo "\nPod scheduled, waiting for containers to start\n" \
-&& kubectl wait pod --for=condition=PodReadyToStartContainers -n newrelic $POD --timeout=300s \
-&& echo "\nPod containers starting, copying custom modules" \
+&& echo "\nPod scheduled, copying custom modules" \
 && kubectl cp custom-modules-folder/imapc -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
 && kubectl cp custom-modules-folder/package.json -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
 && echo "\nWaiting for SJM pod to be ready\n" \

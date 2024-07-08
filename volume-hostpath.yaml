@@ -1,0 +1,63 @@
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: cmf-pv
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 100Mi
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: standard-rwo
+#   volumeMode: Filesystem
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: cmf-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 100Mi
+#   storageClassName: standard-rwo
+  # volumeName: cmf-pv
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: cmf-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 100Mi
+#   storageClassName: standard-rwx
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cmf-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 100Mi
+  storageClassName: hostpath
+  hostPath:
+    path: /tmp/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cmf-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: hostpath
+  volumeName: cmf-pv
