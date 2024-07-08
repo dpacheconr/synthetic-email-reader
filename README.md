@@ -46,7 +46,7 @@ git clone https://github.com/dpacheconr/synthetic-email-reader.git && cd synthet
 To install Synthetics Job Manager and copy the custom-module into running pod, update the volume-azure.yaml as appropriate, as well as private location key before running
 
 ```
-kubectl apply -f volume-azure.yaml -n newrelic \
+kubectl apply -f volume-azure.yaml \
 && helm upgrade --install newrelic-sjm newrelic/synthetics-job-manager -n newrelic --set synthetics.privateLocationKey=NRSP-XXX \
 --set synthetics.hordeApiEndpoint=https://synthetics-horde.eu01.nr-data.net \
 --set global.persistence.existingClaimName="cmf-pvc" --set global.customNodeModules.customNodeModulesPath="custom-modules-folder" \
