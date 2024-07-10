@@ -59,7 +59,7 @@ kubectl apply -f volume-azure.yaml \
 && kubectl cp custom-modules-folder/imapc -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
 && kubectl cp custom-modules-folder/package.json -n newrelic $POD:/var/lib/newrelic/synthetics/modules/ -c synthetics-job-manager \
 && echo "\nWaiting for SJM pod to be ready\n" \
-&& kubectl delete $POD \
+&& kubectl delete pod $POD \
 && POD=$(kubectl get pod -n newrelic -l app.kubernetes.io/name=synthetics-job-manager -o jsonpath="{.items[0].metadata.name}")  \
 && kubectl wait pod --for=condition=Ready -n newrelic $POD --timeout=300s \
 && kubectl logs -n newrelic $POD -c synthetics-job-manager -f | grep -q "Custom node modules installed successfully." \
