@@ -23,7 +23,7 @@ docker run --name newrelic-sjm  \
 -e "HORDE_API_ENDPOINT=https://synthetics-horde.eu01.nr-data.net/" \
 -v /var/run/docker.sock:/var/run/docker.sock:rw \
 -d --restart unless-stopped \
--v ./custom-modules-folder:/var/lib/newrelic/synthetics/modules:rw \
+-v /PATH_CUST_MOD_FOLDER/custom-modules-folder:/var/lib/newrelic/synthetics/modules:rw \
 newrelic/synthetics-job-manager:latest
 ```
 
