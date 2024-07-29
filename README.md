@@ -17,6 +17,16 @@ quay.io/newrelic/synthetics-minion:latest
 
 ## Docker -> SJM 
 
+```
+docker run --name newrelic-sjm  \
+-e "PRIVATE_LOCATION_KEY=NRSP-XXX" \
+-e "HORDE_API_ENDPOINT=https://synthetics-horde.eu01.nr-data.net/" \
+-v /var/run/docker.sock:/var/run/docker.sock:rw \
+-d --restart unless-stopped \
+-v ./custom-modules-folder:/var/lib/newrelic/synthetics/modules:rw \
+newrelic/synthetics-job-manager:latest
+```
+
 - https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/private-locations/job-manager-configuration/
 
 ## Kubernetes -> CPM (EOL)
