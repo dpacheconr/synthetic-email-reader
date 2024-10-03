@@ -22,9 +22,10 @@ class ImapC {
             this.imap.connect();
         });
     }
-    openBox(boxName = 'INBOX') {
+
+    openBox(boxName, readOnly) {
         return new Promise((resolve, reject) => {
-            this.imap.openBox(boxName, (err) => {
+            this.imap.openBox(boxName, readOnly, (err) => {
                 if (err) {
                     reject(err);
                     return;
@@ -33,6 +34,7 @@ class ImapC {
             });
         });
     }
+
     end() {
         return new Promise((resolve) => {
             this.imap.once('close', () => {
@@ -54,9 +56,17 @@ class ImapC {
         });
     }
 
-    moveEmail(uid,location) {
+    expunge(uid) {
         return new Promise((resolve, reject) => {
-            this.imap.move(uid, location, function(err) {
+            this.imap.expunge(uid, function(err) {
+            (err ? reject(err) : resolve());
+            });
+        });
+    }
+
+    addFlags(uid,flags) {
+        return new Promise((resolve, reject) => {
+            this.imap.addFlags(uid, flags, function(err) {
             (err ? reject(err) : resolve());
             });
         });
