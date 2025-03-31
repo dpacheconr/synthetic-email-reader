@@ -45,7 +45,8 @@ async function run(subject) {
         for (const emailtodelete of emailstodelete) {
             console.log("Deleting old email")
             // to move emails to bin
-            deleteEmail = await imap.moveEmail(emailtodelete.uid,'[Gmail]/Bin')
+            await imap.addFlags(emailtodelete.uid,['\\Deleted']);
+            await imap.expunge(emailtodelete.uid);
         }
     
     } else {
@@ -78,7 +79,8 @@ async function run(subject) {
         // OTP_CODE = match[0]
 
         // to move emails to bin
-        deleteEmail = await imap.moveEmail(email.uid,'[Gmail]/Bin')
+        await imap.addFlags(email.uid,['\\Deleted']);
+        await imap.expunge(email.uid);
     }
     await imap.end();
 }
