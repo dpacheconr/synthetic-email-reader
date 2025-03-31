@@ -20,8 +20,7 @@ async function run(subject) {
 
    const result = await imap.connect();
     console.log("Connection result",result)
-    const boxName = await imap.openBox('INBOX');
-
+    const boxName = await imap.openBox('INBOX', false);
 
     var durationInMinutes = 1;
     var to = Date.now()
