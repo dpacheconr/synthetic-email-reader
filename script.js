@@ -72,23 +72,10 @@ async function run(subject) {
     for (const email of emails) {
         // add logic to used with email found
         console.log("Email found")
-        let match = email.body.match(/\d{8}/);
-        let otpcode
-        try {
-          if (match) {
-            otpcode = match[0]
-          } else {
-            match = email.body.match(/\d{7}/);
-            otpcode = match[0]
-          }
-        }
-        catch (e) {
-        }
-        EMAIL_DATA_PARSED = otpcode
-        console.log("OTP code is",EMAIL_DATA_PARSED)
-
+        // let match = email.body.match(/\d{8}/);
+        // OTP_CODE = match[0]
+        
         // to move emails to bin
-
         await imap.addFlags(email.uid,['\\Deleted']);
         await imap.expunge(email.uid);
     }
