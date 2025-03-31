@@ -16,9 +16,8 @@ async function run(subject) {
         }
     };
 
-   const imap = new ImapC.ImapC(config);
-
-   const result = await imap.connect();
+    const imap = new ImapC.ImapC(config);
+    const result = await imap.connect();
     console.log("Connection result",result)
     const boxName = await imap.openBox('INBOX', false);
 
@@ -26,8 +25,6 @@ async function run(subject) {
     var to = Date.now()
     var since = new Date(to - durationInMinutes * 60000);
 
-
-    // delete old emails before checking for new emails
     console.log("Checking for emails older than",since,"to delete")
 
     const deletecriteria = [];
@@ -38,24 +35,25 @@ async function run(subject) {
         deletecriteria.push(['HEADER', 'SUBJECT', subject]);
     }
 
-    let emailstodelete = await imap.fetchEmails(deletecriteria);
+    let emailstodelete = await imap.fetchEmails(deletecriteria,true);
     console.log(emailstodelete.length)
+    
     if (emailstodelete.length > 0){
         for (const emailtodelete of emailstodelete) {
-            console.log("Deleting old email")
+            console.log("Marking old email as seen")
+
             // to move emails to bin
             await imap.addFlags(emailtodelete.uid,['\\Deleted']);
             await imap.expunge(emailtodelete.uid);
-        }
+            }
     
     } else {
         console.log("Not found any emails to delete")
     }
     
-    console.log("Now waiting for new emails since",since)
+    console.log("Waiting for new emails since",since)
 
-    let markEmailasSeen = true // mark email as read if match is
-
+    
     // default criteria is to search for new unseen emails
     const criteria = [];
     criteria.push('UNSEEN');
@@ -64,24 +62,39 @@ async function run(subject) {
         criteria.push(['HEADER', 'SUBJECT', subject]);
     }
 
-    let emails = await imap.fetchEmails(criteria,markEmailasSeen);
+    let emails = await imap.fetchEmails(criteria,true);
 
     while (emails.length < 1){
         console.log("Email has not arrived yet, will check again shortly")
         await sleep(5000); // how long to wait before searching for new emails
-        emails = await imap.fetchEmails(criteria);
+        emails = await imap.fetchEmails(criteria,true);
     }
     for (const email of emails) {
         // add logic to used with email found
         console.log("Email found")
-        // let match = email.body.match(/\d{8}/);
-        // OTP_CODE = match[0]
+        let match = email.body.match(/\d{8}/);
+        let otpcode
+        try {
+          if (match) {
+            otpcode = match[0]
+          } else {
+            match = email.body.match(/\d{7}/);
+            otpcode = match[0]
+          }
+        }
+        catch (e) {
+        }
+        EMAIL_DATA_PARSED = otpcode
+        console.log("OTP code is",EMAIL_DATA_PARSED)
 
         // to move emails to bin
+
         await imap.addFlags(email.uid,['\\Deleted']);
         await imap.expunge(email.uid);
     }
-    await imap.end();
+
+    await imap.end(); 
+
 }
 
 // email subject to search
